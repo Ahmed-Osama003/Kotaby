@@ -2,33 +2,40 @@ package com.graduation.Kotaby.entity;
 
 import jakarta.persistence.*;
 
+@Entity
 @Table(name = "user")
-public class user {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    int id;
+    private Long id;
 
     @Column(name = "user_name")
-    String userName;
+    private String userName;
 
     @Column(name = "password")
-    String password;
+    private String password;
 
     @Column(name = "email")
-    String email;
+    private String email;
 
-    public user(String userName, String password, String email) {
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private UserDetails userDetails;
+
+    public User(String userName, String password, String email) {
         this.userName = userName;
         this.password = password;
         this.email = email;
     }
 
-    public int getId() {
+    public User() {}
+
+    // Getters and Setters
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -56,14 +63,21 @@ public class user {
         this.email = email;
     }
 
+    public UserDetails getUserDetails() {
+        return userDetails;
+    }
+
+    public void setUserDetails(UserDetails userDetails) {
+        this.userDetails = userDetails;
+        userDetails.setUser(this);
+    }
+
     @Override
     public String toString() {
-        return "user{" +
+        return "User{" +
                 "id=" + id +
                 ", userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 '}';
     }
-
 }
