@@ -23,7 +23,11 @@ public class Task {
     @Column(name = "end_date")
     Date endDate;
 
-    public Task(int startPage, int endPage, Date endDate) {
+    @Column (name = "completed")
+    Boolean completed;
+
+    public Task(boolean completed, int startPage, int endPage, Date endDate) {
+        this.completed = completed;
         this.startPage = startPage;
         this.endPage = endPage;
         this.endDate = endDate;
@@ -65,6 +69,13 @@ public class Task {
         this.endDate = endDate;
     }
 
+    public Boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(Boolean completed) {
+        this.completed = completed;
+    }
 
     @Override
     public String toString() {
