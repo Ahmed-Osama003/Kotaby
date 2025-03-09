@@ -19,9 +19,6 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private UserDetails userDetails;
-
     public User(String userName, String password, String email) {
         this.userName = userName;
         this.password = password;
@@ -63,20 +60,12 @@ public class User {
         this.email = email;
     }
 
-    public UserDetails getUserDetails() {
-        return userDetails;
-    }
-
-    public void setUserDetails(UserDetails userDetails) {
-        this.userDetails = userDetails;
-        userDetails.setUser(this);
-    }
-
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 '}';
     }

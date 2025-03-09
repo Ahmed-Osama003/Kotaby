@@ -19,10 +19,6 @@ public class UserDetails {
     @Column(name = "nationality")
     private String nationality;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "user_id")
-    private User user;
 
     public UserDetails() {}
 
@@ -65,11 +61,13 @@ public class UserDetails {
         this.nationality = nationality;
     }
 
-    public User getUser() {
-        return user;
-    }
 
-    public void setUser(User user) {
-        this.user = user;
+    @Override
+    public String toString() {
+        return "UserDetails{" +
+                "userId=" + userId +
+                ", image='" + image + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", Nationality=" + nationality;
     }
 }
