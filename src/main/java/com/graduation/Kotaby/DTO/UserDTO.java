@@ -1,5 +1,8 @@
 package com.graduation.Kotaby.DTO;
 
+import com.graduation.Kotaby.entity.User;
+import com.graduation.Kotaby.entity.UserDetails;
+
 import java.util.Date;
 
 public class UserDTO {
@@ -69,5 +72,22 @@ public class UserDTO {
 
     public void setNationality(String nationality) {
         this.nationality = nationality;
+    }
+
+    public User toUser() {
+        User user = new User();
+        user.setId(id);
+        user.setUserName(userName);
+        user.setPassword(password);
+        user.setEmail(email);
+        return user;
+    }
+
+    public UserDetails toUserDetails() {
+        UserDetails userDetails = new UserDetails();
+        userDetails.setImage(image);
+        userDetails.setDateOfBirth(dateOfBirth);
+        userDetails.setNationality(nationality);
+        return userDetails;
     }
 }
