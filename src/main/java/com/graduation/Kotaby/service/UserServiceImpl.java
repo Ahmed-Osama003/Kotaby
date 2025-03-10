@@ -3,9 +3,11 @@ package com.graduation.Kotaby.service;
 import com.graduation.Kotaby.entity.User;
 import com.graduation.Kotaby.repository.userDAO;
 import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class UserServiceImpl implements UserService {
 
     private final userDAO userDAO;
