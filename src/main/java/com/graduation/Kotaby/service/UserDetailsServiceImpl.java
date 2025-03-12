@@ -5,6 +5,7 @@ import com.graduation.Kotaby.repository.UserDetailsDAO;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -12,10 +13,12 @@ import java.util.List;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserDetailsDAO userDetailsDAO;
+    private final CloudinaryService cloudinaryService;
 
     @Autowired
-    public UserDetailsServiceImpl(UserDetailsDAO userDetailsDAO) {
+    public UserDetailsServiceImpl(UserDetailsDAO userDetailsDAO, CloudinaryService cloudinaryService) {
         this.userDetailsDAO = userDetailsDAO;
+        this.cloudinaryService = cloudinaryService;
     }
 
     @Override
@@ -46,5 +49,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional
     public List<UserDetails> getAllUsersDetails() {
         return userDetailsDAO.getAllUsersDetails();
+    }
+
+    @Override
+    public String updateProfilePhoto(Long userId, MultipartFile file) {
+        return cloudinaryService.uploadImage(file);
     }
 }

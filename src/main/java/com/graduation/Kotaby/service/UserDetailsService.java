@@ -1,6 +1,7 @@
 package com.graduation.Kotaby.service;
 
 import com.graduation.Kotaby.entity.UserDetails;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -10,4 +11,6 @@ public interface UserDetailsService {
     public void deleteUserDetails(int id);
     public void updateUserDetails(UserDetails userDetails);
     public List<UserDetails> getAllUsersDetails();
+
+    String updateProfilePhoto(Long userId, MultipartFile file);
 }
