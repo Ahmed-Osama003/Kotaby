@@ -25,12 +25,13 @@ public class UserController {
 
     @PostMapping("/register")
     public void saveUser(@RequestBody UserDTO userDTO) {
-        if (userService.getUserByEmail(userDTO.getEmail()) == null) {
-            User user = userDTO.toUser();
-            UserDetails userDetails = userDTO.toUserDetails();
-            userService.saveUser(user);
-            userDetailsDAO.saveUserDetails(userDetails);
-        }
+        userDTO.setId(null);
+        User user = userDTO.toUser();
+        userService.saveUser(user);
+        userDTO.setId(user.getId());
+        UserDetails userDetails = userDTO.toUserDetails();
+        userDetails.setUserId(user.getId());
+        userDetailsDAO.saveUserDetails(userDetails);
     }
 
     @GetMapping("/{id}")

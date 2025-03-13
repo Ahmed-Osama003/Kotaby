@@ -4,16 +4,16 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "UserDetails")
+@Table(name = "userDetails")
 public class UserDetails {
     @Id
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "image")
+    @Column(name = "user_photo")
     private String image;
 
-    @Column(name = "DateOfBirth")
+    @Column(name = "Date_of_birth")
     private Date dateOfBirth;
 
     @Column(name = "nationality")
