@@ -14,12 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
-    private final UserDetailsDAO userDetailsDAO;
     private final UserDetailsService userDetailsService;
 
-    public UserController(UserService userService, UserDetailsDAO userDetailsDAO, UserDetailsService userDetailsService) {
+    public UserController(UserService userService, UserDetailsService userDetailsService) {
         this.userService = userService;
-        this.userDetailsDAO = userDetailsDAO;
         this.userDetailsService = userDetailsService;
     }
 
@@ -31,7 +29,7 @@ public class UserController {
         userDTO.setId(user.getId());
         UserDetails userDetails = userDTO.toUserDetails();
         userDetails.setUserId(user.getId());
-        userDetailsDAO.saveUserDetails(userDetails);
+        userDetailsService.saveUserDetails(userDetails);
     }
 
     @GetMapping("/{id}")
@@ -44,8 +42,6 @@ public class UserController {
     public ResponseEntity<String> updateUserPhoto(
             @PathVariable Long userId,
             @RequestPart("file") MultipartFile file) {
-
-        System.out.println("File name: " + file.getOriginalFilename());
 
         String imageUrl = userDetailsService.updateProfilePhoto(userId, file);
         return ResponseEntity.ok(imageUrl);

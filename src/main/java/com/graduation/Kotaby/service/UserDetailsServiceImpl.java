@@ -52,7 +52,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
+    @Transactional
     public String updateProfilePhoto(Long userId, MultipartFile file) {
-        return cloudinaryService.uploadImage(file);
+        String url = cloudinaryService.uploadImage(file);
+        UserDetails userDetails = userDetailsDAO.getUserDetails(userId.intValue());
+        userDetails.setImage(url);
+        userDetailsDAO.updateUserDetails(userDetails);
+        return url;
     }
 }
