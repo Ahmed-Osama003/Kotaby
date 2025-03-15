@@ -8,12 +8,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class userDAOimpl implements userDAO {
+public class UserDAOimpl implements UserDAO {
 
     private final EntityManager entityManager;
 
     @Autowired
-    public userDAOimpl(EntityManager entityManager) {
+    public UserDAOimpl(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
@@ -39,16 +39,11 @@ public class userDAOimpl implements userDAO {
 
     @Override
     public List<User> getUsers() {
-        return entityManager.createQuery(
-                "from User", User.class).
-                getResultList();
+        return entityManager.createQuery("from User", User.class).getResultList();
     }
 
     @Override
     public User getUserByEmail(String email) {
-        return entityManager.createQuery(
-                "from User where email = :email", User.class).
-                setParameter("email", email).
-                getSingleResult();
+        return entityManager.createQuery("from User where email = :email", User.class).setParameter("email", email).getSingleResult();
     }
 }

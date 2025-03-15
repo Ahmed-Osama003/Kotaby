@@ -1,7 +1,8 @@
 package com.graduation.Kotaby.service;
 
+import com.graduation.Kotaby.DTO.UserDTO;
 import com.graduation.Kotaby.entity.User;
-import com.graduation.Kotaby.repository.userDAO;
+import com.graduation.Kotaby.repository.UserDAO;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -10,10 +11,10 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final userDAO userDAO;
+    private final UserDAO userDAO;
 
 
-    public UserServiceImpl(userDAO userDAO) {
+    public UserServiceImpl(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
 

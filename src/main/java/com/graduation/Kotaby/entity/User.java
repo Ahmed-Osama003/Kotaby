@@ -2,6 +2,9 @@ package com.graduation.Kotaby.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "user")
 public class User {
@@ -18,6 +21,8 @@ public class User {
 
     @Column(name = "email")
     private String email;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Task> tasks = new ArrayList<>();
 
     public User(String userName, String password, String email) {
         this.userName = userName;
@@ -25,7 +30,8 @@ public class User {
         this.email = email;
     }
 
-    public User() {}
+    public User() {
+    }
 
     // Getters and Setters
     public Long getId() {
@@ -62,11 +68,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+        return "User{" + "id=" + id + ", userName='" + userName + '\'' + ", password='" + password + '\'' + ", email='" + email + '\'' + '}';
     }
 }

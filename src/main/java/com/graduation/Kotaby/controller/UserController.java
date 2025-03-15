@@ -3,7 +3,6 @@ package com.graduation.Kotaby.controller;
 import com.graduation.Kotaby.DTO.UserDTO;
 import com.graduation.Kotaby.entity.User;
 import com.graduation.Kotaby.entity.UserDetails;
-import com.graduation.Kotaby.repository.UserDetailsDAO;
 import com.graduation.Kotaby.service.UserDetailsService;
 import com.graduation.Kotaby.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -39,11 +38,9 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/photo")
-    public ResponseEntity<String> updateUserPhoto(
-            @PathVariable Long userId,
-            @RequestPart("file") MultipartFile file) {
-
+    public ResponseEntity<String> updateUserPhoto(@PathVariable Long userId, @RequestPart("file") MultipartFile file) {
         String imageUrl = userDetailsService.updateProfilePhoto(userId, file);
         return ResponseEntity.ok(imageUrl);
     }
+
 }

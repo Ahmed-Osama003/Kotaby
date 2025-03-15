@@ -1,6 +1,10 @@
 package com.graduation.Kotaby.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import java.util.Date;
 
 @Entity
@@ -20,7 +24,8 @@ public class UserDetails {
     private String nationality;
 
 
-    public UserDetails() {}
+    public UserDetails() {
+    }
 
     public UserDetails(String image, Date dateOfBirth, String nationality) {
         this.image = image;
@@ -64,10 +69,6 @@ public class UserDetails {
 
     @Override
     public String toString() {
-        return "UserDetails{" +
-                "userId=" + userId +
-                ", image='" + image + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
-                ", Nationality=" + nationality;
+        return "UserDetails{" + "userId=" + userId + ", image='" + image + '\'' + ", dateOfBirth=" + dateOfBirth + ", Nationality=" + nationality;
     }
 }

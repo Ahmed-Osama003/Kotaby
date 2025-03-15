@@ -1,7 +1,6 @@
 package com.graduation.Kotaby.entity;
 
 import jakarta.persistence.*;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Date;
 
@@ -12,30 +11,34 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    int id;
+    private int id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(name = "start_page")
-    int startPage;
+    private int startPage;
 
     @Column(name = "end_page")
-    int endPage;
+    private int endPage;
 
-    @Column(name = "end_date")
-    Date endDate;
+    @Column(name = "task_date")
+    private Date taskDate;
 
-    @Column (name = "completed")
-    Boolean completed;
+    @Column(name = "progress")
+    private int progress;
 
-    public Task(boolean completed, int startPage, int endPage, Date endDate) {
-        this.completed = completed;
+    public Task(User user, int startPage, int endPage, Date taskDate, int progress) {
+        this.user = user;
         this.startPage = startPage;
         this.endPage = endPage;
-        this.endDate = endDate;
+        this.taskDate = taskDate;
+        this.progress = progress;
     }
 
     public Task() {
     }
-
 
     public int getId() {
         return id;
@@ -43,6 +46,14 @@ public class Task {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public int getStartPage() {
@@ -61,29 +72,24 @@ public class Task {
         this.endPage = endPage;
     }
 
-    public Date getEndDate() {
-        return endDate;
+    public Date getTaskDate() {
+        return taskDate;
     }
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public void setTaskDate(Date taskDate) {
+        this.taskDate = taskDate;
     }
 
-    public Boolean isCompleted() {
-        return completed;
+    public int getProgress() {
+        return progress;
     }
 
-    public void setCompleted(Boolean completed) {
-        this.completed = completed;
+    public void setProgress(int progress) {
+        this.progress = progress;
     }
 
     @Override
     public String toString() {
-        return "Task{" +
-                "id=" + id +
-                ", startPage='" + startPage + '\'' +
-                ", endPage='" + endPage + '\'' +
-                ", endDate='" + endDate + '\'' +
-                '}';
+        return "Task{" + "id=" + id + ", user=" + user + ", startPage=" + startPage + ", endPage=" + endPage + ", taskDate=" + taskDate + ", progress=" + progress + '}';
     }
 }

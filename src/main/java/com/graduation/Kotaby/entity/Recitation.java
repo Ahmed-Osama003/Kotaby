@@ -1,4 +1,4 @@
 package com.graduation.Kotaby.entity;
 
-public class words {
+public class Recitation {
 }

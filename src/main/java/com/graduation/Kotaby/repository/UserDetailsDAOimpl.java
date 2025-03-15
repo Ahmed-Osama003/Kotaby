@@ -43,7 +43,7 @@ public class UserDetailsDAOimpl implements UserDetailsDAO {
     @Override
     public List<UserDetails> getAllUsersDetails() {
         return entityManager.createQuery(
-                "from UserDetails", UserDetails.class).
+                        "from UserDetails", UserDetails.class).
                 getResultList();
     }
 }
