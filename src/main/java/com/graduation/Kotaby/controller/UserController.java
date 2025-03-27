@@ -5,6 +5,7 @@ import com.graduation.Kotaby.entity.User;
 import com.graduation.Kotaby.entity.UserDetails;
 import com.graduation.Kotaby.service.UserDetailsService;
 import com.graduation.Kotaby.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
