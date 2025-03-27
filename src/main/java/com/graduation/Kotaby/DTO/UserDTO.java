@@ -18,6 +18,16 @@ public class UserDTO {
     public UserDTO() {
     }
 
+    public UserDTO(User user, UserDetails userDetails) {
+        this.id = user.getId();
+        this.userName = user.getUserName();
+        this.password = user.getPassword();
+        this.email = user.getEmail();
+        this.image = userDetails.getImage();
+        this.dateOfBirth = userDetails.getDateOfBirth();
+        this.nationality = userDetails.getNationality();
+    }
+
     public Long getId() {
         return id;
     }
