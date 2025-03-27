@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -30,6 +33,18 @@ public class UserController {
         userDetails.setUserId(user.getId());
         userDetailsService.saveUserDetails(userDetails);
     }
+
+    @GetMapping("")
+    public List<UserDTO> getAllUsers() {
+        List<User> users = userService.getUsers();
+        List<UserDetails> userDetails = userDetailsService.getAllUsersDetails();
+        List<UserDTO> userDTOs = new ArrayList<>();
+        for (int i = 0; i < users.size(); i++) {
+            userDTOs.add(new UserDTO(users.get(i), userDetails.get(i)));
+        }
+        return userDTOs;
+    }
+
 
     @GetMapping("/{id}")
     public User getUser(@PathVariable int id) {
