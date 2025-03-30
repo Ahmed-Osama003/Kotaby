@@ -3,13 +3,14 @@ package com.graduation.Kotaby.repository;
 import com.graduation.Kotaby.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserDAO {
     public void saveUser(User user);
 
     public User getUser(int id);
 
-    public User getUserByEmail(String email);
+    public Optional<User> getUserByEmail(String email);
 
     public List<User> getUsers();
 

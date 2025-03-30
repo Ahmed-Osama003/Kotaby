@@ -51,6 +51,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User getUserByEmail(String email) {
-        return userDAO.getUserByEmail(email);
+        return userDAO.getUserByEmail(email).orElse(null);
     }
 }
