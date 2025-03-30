@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -30,15 +31,15 @@ public class UserController {
         userDTO.setId(null);
         System.out.println(userDTO.getEmail());
         User user = userService.getUserByEmail(userDTO.getEmail());
+        UserDetails userDetails;
         if (user != null) {
-            System.out.println("User already exists");
-            // User already exists with this email address tell the user to login in the response
-             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+            userDetails = userDetailsService.getUserDetails(user.getId().intValue());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new UserDTO(user, userDetails));
         }
         user = userDTO.toUser();
         userService.saveUser(user);
         userDTO.setId(user.getId());
-        UserDetails userDetails = userDTO.toUserDetails();
+        userDetails = userDTO.toUserDetails();
         userDetails.setUserId(user.getId());
         userDetailsService.saveUserDetails(userDetails);
         return ResponseEntity.ok(new UserDTO(user, userDetails));
@@ -69,4 +70,20 @@ public class UserController {
         return ResponseEntity.ok(imageUrl);
     }
 
+
+    // login method
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody UserDTO userDTO) {
+        User user = userService.getUserByEmail(userDTO.getEmail());
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "incorrect email or password"));
+        }
+        if (!user.getPassword().equals(userDTO.getPassword())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "incorrect email or password"));
+        }
+        UserDetails userDetails = userDetailsService.getUserDetails(user.getId().intValue());
+        return ResponseEntity.ok(new UserDTO(user, userDetails));
+    }
 }
