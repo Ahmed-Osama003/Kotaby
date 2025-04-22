@@ -45,6 +45,18 @@ public class UserController {
         return ResponseEntity.ok(new UserDTO(user, userDetails));
     }
 
+    @PostMapping("/{userId}/update")
+    public ResponseEntity<UserDTO> updateUser(@PathVariable int userId, @RequestBody User user) {
+        User existingUser = userService.getUser(userId);
+        if (existingUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        existingUser.setUserName(user.getUserName());
+        existingUser.setPassword(user.getPassword());
+        userService.saveUser(existingUser);
+        UserDetails userDetails = userDetailsService.getUserDetails(userId);
+        return ResponseEntity.ok(new UserDTO(existingUser, userDetails));
+    }
     @GetMapping("")
     public List<UserDTO> getAllUsers() {
         List<User> users = userService.getUsers();
