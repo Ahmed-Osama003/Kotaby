@@ -46,10 +46,11 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/update")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable int userId, @RequestBody User user) {
+    public ResponseEntity<?> updateUser(@PathVariable int userId, @RequestBody User user) {
         User existingUser = userService.getUser(userId);
         if (existingUser == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "User not found"));
         }
         existingUser.setUserName(user.getUserName());
         existingUser.setPassword(user.getPassword());
