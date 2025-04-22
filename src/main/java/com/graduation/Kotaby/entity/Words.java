@@ -12,15 +12,15 @@ public class Words {
     private Long id;
 
     @Column(name = "word_number")
-    private Integer wordNumber;
+    private int wordNumber;
 
     @Column(name = "ayah_number")
-    private Integer ayahNumber;
+    private int ayahNumber;
 
     @Column(name = "sora_number")
-    private Integer soraNumber;
+    private int soraNumber;
 
-    public Words(Integer wordNumber, Integer ayahNumber, Integer soraNumber) {
+    public Words(int wordNumber, int ayahNumber, int soraNumber) {
         this.wordNumber = wordNumber;
         this.ayahNumber = ayahNumber;
         this.soraNumber = soraNumber;
@@ -37,7 +37,7 @@ public class Words {
         this.id = id;
     }
 
-    public Integer getWordNumber() {
+    public int getWordNumber() {
         return wordNumber;
     }
 
@@ -45,7 +45,7 @@ public class Words {
         this.wordNumber = wordNumber;
     }
 
-    public Integer getAyahNumber() {
+    public int getAyahNumber() {
         return ayahNumber;
     }
 
@@ -53,11 +53,11 @@ public class Words {
         this.ayahNumber = ayahNumber;
     }
 
-    public Integer getSoraNumber() {
+    public int getSoraNumber() {
         return soraNumber;
     }
 
-    public void setSoraNumber(Integer soraNumber) {
+    public void setSoraNumber(int soraNumber) {
         this.soraNumber = soraNumber;
     }
 
