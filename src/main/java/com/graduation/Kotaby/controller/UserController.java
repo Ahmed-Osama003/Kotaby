@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "https://kotaby.duckdns.org")
 @RestController
 @RequestMapping("/users")
 public class UserController {
