@@ -3,7 +3,7 @@ package com.graduation.Kotaby.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Words")
+@Table(name = "words")
 public class Words {
 
     @Id

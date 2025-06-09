@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 import java.util.Date;
 
 @Entity
-@Table(name = "userDetails")
+@Table(name = "user_details")
 public class UserDetails {
     @Id
     @Column(name = "user_id")
@@ -17,7 +17,7 @@ public class UserDetails {
     @Column(name = "user_photo")
     private String image;
 
-    @Column(name = "Date_of_birth")
+    @Column(name = "date_of_birth")
     private Date dateOfBirth;
 
     @Column(name = "nationality")
