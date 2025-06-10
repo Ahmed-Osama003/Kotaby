@@ -1,6 +1,6 @@
 package com.graduation.Kotaby.repository;
 
-import com.graduation.Kotaby.entity.UserDetails;
+import com.graduation.Kotaby.entity.primary.UserDetails;
 
 import java.util.List;
 

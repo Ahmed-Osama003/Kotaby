@@ -1,6 +1,6 @@
 package com.graduation.Kotaby.service;
 
-import com.graduation.Kotaby.entity.Task;
+import com.graduation.Kotaby.entity.primary.Task;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.graduation.Kotaby.DTO;
 
-import com.graduation.Kotaby.entity.User;
-import com.graduation.Kotaby.entity.UserDetails;
+import com.graduation.Kotaby.entity.primary.User;
+import com.graduation.Kotaby.entity.primary.UserDetails;
 
 import java.util.Date;
 

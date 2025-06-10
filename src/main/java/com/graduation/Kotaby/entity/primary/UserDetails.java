@@ -1,4 +1,4 @@
-package com.graduation.Kotaby.entity;
+package com.graduation.Kotaby.entity.primary;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,16 +13,12 @@ public class UserDetails {
     @Id
     @Column(name = "user_id")
     private Long userId;
-
     @Column(name = "user_photo")
     private String image;
-
     @Column(name = "date_of_birth")
     private Date dateOfBirth;
-
     @Column(name = "nationality")
     private String nationality;
-
 
     public UserDetails() {
     }
@@ -65,7 +61,6 @@ public class UserDetails {
     public void setNationality(String nationality) {
         this.nationality = nationality;
     }
-
 
     @Override
     public String toString() {

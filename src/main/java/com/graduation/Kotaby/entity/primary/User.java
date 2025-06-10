@@ -1,4 +1,4 @@
-package com.graduation.Kotaby.entity;
+package com.graduation.Kotaby.entity.primary;
 
 import jakarta.persistence.*;
 
@@ -12,13 +12,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-
     @Column(name = "user_name")
     private String userName;
-
     @Column(name = "password")
     private String password;
-
     @Column(name = "email")
     private String email;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

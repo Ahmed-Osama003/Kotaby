@@ -1,14 +1,14 @@
 package com.graduation.Kotaby.service;
 
-import com.graduation.Kotaby.DTO.UserDTO;
-import com.graduation.Kotaby.entity.User;
+import com.graduation.Kotaby.entity.primary.User;
 import com.graduation.Kotaby.repository.UserDAO;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional("primaryTransactionManager")
 public class UserServiceImpl implements UserService {
 
     private final UserDAO userDAO;

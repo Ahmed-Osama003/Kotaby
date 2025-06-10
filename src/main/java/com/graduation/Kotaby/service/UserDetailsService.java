@@ -1,6 +1,6 @@
 package com.graduation.Kotaby.service;
 
-import com.graduation.Kotaby.entity.UserDetails;
+import com.graduation.Kotaby.entity.primary.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

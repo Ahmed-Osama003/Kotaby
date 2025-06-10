@@ -1,8 +1,8 @@
 package com.graduation.Kotaby.controller;
 
 import com.graduation.Kotaby.DTO.UserDTO;
-import com.graduation.Kotaby.entity.User;
-import com.graduation.Kotaby.entity.UserDetails;
+import com.graduation.Kotaby.entity.primary.User;
+import com.graduation.Kotaby.entity.primary.UserDetails;
 import com.graduation.Kotaby.service.UserDetailsService;
 import com.graduation.Kotaby.service.UserService;
 import org.springframework.http.HttpStatus;

@@ -1,12 +1,13 @@
 package com.graduation.Kotaby.service;
 
-import com.graduation.Kotaby.entity.Task;
+import com.graduation.Kotaby.entity.primary.Task;
 import com.graduation.Kotaby.repository.TaskDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+@Transactional("primaryTransactionManager")
 @Service
 public class TaskServiceImpl implements TaskService {
 

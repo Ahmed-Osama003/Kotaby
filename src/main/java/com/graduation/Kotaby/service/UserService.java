@@ -1,7 +1,6 @@
 package com.graduation.Kotaby.service;
 
-import com.graduation.Kotaby.DTO.UserDTO;
-import com.graduation.Kotaby.entity.User;
+import com.graduation.Kotaby.entity.primary.User;
 
 import java.util.List;
 

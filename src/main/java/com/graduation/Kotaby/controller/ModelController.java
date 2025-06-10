@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -33,11 +34,12 @@ public class ModelController {
             @RequestParam("page") int page) {
         try {
             String text = modelService.audioToText(audioFile);
+            List<String> memoWords = Arrays.asList(text.split(" "));
             List<String> words = wordsService.getWordsByPage(page);
-            System.out.println(text);
-            System.out.println();
-            System.out.println();
             words.forEach(System.out::println);
+            System.out.println();
+            System.out.println();
+            memoWords.forEach(System.out::println);
             return ResponseEntity.ok(Map.of(
                     "success", true,
                     "transcribedText", text,

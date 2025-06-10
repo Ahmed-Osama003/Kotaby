@@ -1,4 +1,4 @@
-package com.graduation.Kotaby.entity;
+package com.graduation.Kotaby.entity.primary;
 
 import jakarta.persistence.*;
 

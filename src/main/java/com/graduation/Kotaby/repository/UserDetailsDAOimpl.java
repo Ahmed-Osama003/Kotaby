@@ -1,7 +1,8 @@
 package com.graduation.Kotaby.repository;
 
-import com.graduation.Kotaby.entity.UserDetails;
+import com.graduation.Kotaby.entity.primary.UserDetails;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -11,7 +12,7 @@ import java.util.List;
 @Repository
 @Transactional
 public class UserDetailsDAOimpl implements UserDetailsDAO {
-
+    @PersistenceContext(unitName = "primary")
     private final EntityManager entityManager;
 
     @Autowired
