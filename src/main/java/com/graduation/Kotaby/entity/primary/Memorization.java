@@ -16,7 +16,7 @@ public class Memorization {
     @Column(name = "page")
     private int page;
 
-    @Column(name = "lastWord")
+    @Column(name = "last_word")
     private int lastWord;
 
     public Memorization() {

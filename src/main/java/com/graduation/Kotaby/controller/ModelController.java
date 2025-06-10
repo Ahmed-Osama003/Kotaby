@@ -1,5 +1,6 @@
 package com.graduation.Kotaby.controller;
 
+import com.graduation.Kotaby.service.CheckerService;
 import com.graduation.Kotaby.service.ModelService;
 import com.graduation.Kotaby.service.WordsService;
 import org.springframework.http.HttpStatus;
@@ -20,38 +21,32 @@ import java.util.Map;
 public class ModelController {
     private final ModelService modelService;
     private final WordsService wordsService;
+    private final CheckerService checkerService;
 
-    public ModelController(ModelService modelService, WordsService wordsService) {
+    public ModelController(ModelService modelService, WordsService wordsService, CheckerService checkerService) {
         this.modelService = modelService;
         this.wordsService = wordsService;
+        this.checkerService = checkerService;
     }
 
     @PostMapping(path = "/transcribe",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Object>> transcribeAudio(
+    public List<String> transcribeAudio(
             @RequestParam("file") MultipartFile audioFile,
+            @RequestParam("id") int userID,
             @RequestParam("page") int page) {
         try {
             String text = modelService.audioToText(audioFile);
-            List<String> memoWords = Arrays.asList(text.split(" "));
-            List<String> words = wordsService.getWordsByPage(page);
-            words.forEach(System.out::println);
+            List<String> userWords = Arrays.asList(text.split(" "));
+            List<String> pageWords = wordsService.getWordsByPage(page);
+            userWords.forEach(System.out::println);
             System.out.println();
             System.out.println();
-            memoWords.forEach(System.out::println);
-            return ResponseEntity.ok(Map.of(
-                    "success", true,
-                    "transcribedText", text,
-                    "filename", audioFile.getOriginalFilename()
-            ));
+            pageWords.forEach(System.out::println);
+            return checkerService.check(userWords, pageWords, userID, page);
         } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of(
-                            "success", false,
-                            "error", e.getMessage()
-                    ));
+            return List.of("Error processing audio file: " + e.getMessage());
         }
     }
 

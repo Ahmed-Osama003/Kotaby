@@ -30,7 +30,7 @@ public class SecondaryDatabaseConfig {
             @Qualifier("secondaryDataSource") DataSource dataSource) {
 
         Map<String, Object> properties = new HashMap<>();
-        properties.put("hibernate.hbm2ddl.auto", "update");
+        properties.put("hibernate.hbm2ddl.auto", "none");
         properties.put("hibernate.dialect", "org.hibernate.community.dialect.SQLiteDialect");
         properties.put("hibernate.show_sql", "true");
         properties.put("hibernate.physical_naming_strategy", "org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy");
