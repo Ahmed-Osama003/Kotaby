@@ -6,18 +6,17 @@ import com.graduation.Kotaby.service.WordsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/memo")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ModelController {
     private final ModelService modelService;
     private final WordsService wordsService;
@@ -29,10 +28,17 @@ public class ModelController {
         this.checkerService = checkerService;
     }
 
+    @GetMapping("/test-cors")
+    public ResponseEntity<Map<String, String>> testCorsEndpoint() {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "CORS is working!");
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping(path = "/transcribe",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<String> transcribeAudio(
+    public ResponseEntity<?> transcribeAudio(
             @RequestParam("file") MultipartFile audioFile,
             @RequestParam("id") int userID,
             @RequestParam("page") int page) {
@@ -40,15 +46,20 @@ public class ModelController {
             String text = modelService.audioToText(audioFile);
             List<String> userWords = Arrays.asList(text.split(" "));
             List<String> pageWords = wordsService.getWordsByPage(page);
-            userWords.forEach(System.out::println);
-            System.out.println();
-            System.out.println();
-            pageWords.forEach(System.out::println);
-            return checkerService.check(userWords, pageWords, userID, page);
+            
+            List<String> result = checkerService.check(userWords, pageWords, userID, page);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("transcription", text);
+            response.put("result", result);
+            
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return List.of("Error processing audio file: " + e.getMessage());
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Error processing audio file: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                .body(errorResponse);
         }
     }
-
 }
 
