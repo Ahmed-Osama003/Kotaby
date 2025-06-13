@@ -8,6 +8,7 @@ import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -54,6 +55,10 @@ public class WordsDAOImpl implements WordsDAO {
             AyaResponse ayaResponse = new AyaResponse(soraId, ayaOrder, wordsText);
             ayaResponses.add(ayaResponse);
         }
+
+        ayaResponses.sort(Comparator
+                .comparing(AyaResponse::getSoraId)
+                .thenComparing(AyaResponse::getAyaOrder));
 
         return ayaResponses;
     }
