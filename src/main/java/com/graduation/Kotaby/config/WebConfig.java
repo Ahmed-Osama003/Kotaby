@@ -14,7 +14,7 @@ public class WebConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        
+
         config.setAllowedOrigins(Arrays.asList(
                 "http://localhost:3001",
                 "http://localhost:8080",
