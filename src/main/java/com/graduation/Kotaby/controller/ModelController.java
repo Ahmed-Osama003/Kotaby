@@ -16,6 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/memo")
+@CrossOrigin
 public class ModelController {
     private final ModelService modelService;
     private final WordsService wordsService;
