@@ -1,21 +1,33 @@
 package com.graduation.Kotaby.config;
 
-
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import java.util.Arrays;
 
 @Configuration
-public class WebConfig implements WebMvcConfigurer {
+public class WebConfig {
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        // Allow CORS for any origin wity all methods and headers
-        registry.addMapping("/**")
-                .allowedOrigins("*") // Allow all origins
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allow specific HTTP methods
-                .allowedHeaders("*") // Allow all headers
-                .allowCredentials(true); // Allow credentials (cookies, authorization headers, etc.)
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+
+        config.setAllowedOrigins(Arrays.asList(
+                "http://localhost:3001",
+                "http://localhost:8080",
+                "https://kotaby.duckdns.org"
+        ));
+
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(Arrays.asList("*"));
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+
+        return new CorsFilter(source);
     }
-
 }
