@@ -47,7 +47,6 @@ logs/
 hs_err_pid*
 
 # Ignore database & cache files
-*.db
 *.sqlite
 *.cache
 
