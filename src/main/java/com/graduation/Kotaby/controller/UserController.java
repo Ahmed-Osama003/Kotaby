@@ -77,7 +77,7 @@ public class UserController {
         return new UserDTO(user, userDetails);
     }
 
-    @PutMapping("/{userId}/photo")
+    @PostMapping("/{userId}/photo")
     public ResponseEntity<String> updateUserPhoto(@PathVariable Long userId, @RequestPart("file") MultipartFile file) {
         String imageUrl = userDetailsService.updateProfilePhoto(userId, file);
         return ResponseEntity.ok(imageUrl);
