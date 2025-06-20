@@ -1,8 +1,10 @@
 package com.graduation.Kotaby.controller;
 
 import com.graduation.Kotaby.DTO.UserDTO;
+import com.graduation.Kotaby.entity.primary.Streak;
 import com.graduation.Kotaby.entity.primary.User;
 import com.graduation.Kotaby.entity.primary.UserDetails;
+import com.graduation.Kotaby.service.StreakService;
 import com.graduation.Kotaby.service.UserDetailsService;
 import com.graduation.Kotaby.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -19,15 +21,36 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     private final UserDetailsService userDetailsService;
+    private final StreakService streakService;
 
-    public UserController(UserService userService, UserDetailsService userDetailsService) {
+    public UserController(UserService userService, UserDetailsService userDetailsService, StreakService streakService) {
         this.userService = userService;
         this.userDetailsService = userDetailsService;
+        this.streakService = streakService;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody UserDTO userDTO) {
+        User user = userService.getUserByEmail(userDTO.getEmail());
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "incorrect email or password"));
+        }
+        if (!user.getPassword().equals(userDTO.getPassword())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "incorrect email or password"));
+        }
+        UserDetails userDetails = userDetailsService.getUserDetails(user.getId().intValue());
+        Streak streak = streakService.getStreak(user.getId().intValue())
+                .orElseGet(() -> null);
+        if (streak == null) {
+            streakService.create(user.getId().intValue());
+        }
+        return ResponseEntity.ok(new UserDTO(user, userDetails));
     }
 
     @PostMapping("/register")
     public ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO userDTO) {
-
         userDTO.setId(null);
         System.out.println(userDTO.getEmail());
         User user = userService.getUserByEmail(userDTO.getEmail());
@@ -42,6 +65,7 @@ public class UserController {
         userDetails = userDTO.toUserDetails();
         userDetails.setUserId(user.getId());
         userDetailsService.saveUserDetails(userDetails);
+        streakService.create(user.getId().intValue());
         return ResponseEntity.ok(new UserDTO(user, userDetails));
     }
 
@@ -58,6 +82,7 @@ public class UserController {
         UserDetails userDetails = userDetailsService.getUserDetails(userId);
         return ResponseEntity.ok(new UserDTO(existingUser, userDetails));
     }
+
     @GetMapping("")
     public List<UserDTO> getAllUsers() {
         List<User> users = userService.getUsers();
@@ -68,7 +93,6 @@ public class UserController {
         }
         return userDTOs;
     }
-
 
     @GetMapping("/{id}")
     public UserDTO getUser(@PathVariable int id) {
@@ -81,22 +105,5 @@ public class UserController {
     public ResponseEntity<String> updateUserPhoto(@PathVariable Long userId, @RequestPart("file") MultipartFile file) {
         String imageUrl = userDetailsService.updateProfilePhoto(userId, file);
         return ResponseEntity.ok(imageUrl);
-    }
-
-
-    // login method
-    @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody UserDTO userDTO) {
-        User user = userService.getUserByEmail(userDTO.getEmail());
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "incorrect email or password"));
-        }
-        if (!user.getPassword().equals(userDTO.getPassword())) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "incorrect email or password"));
-        }
-        UserDetails userDetails = userDetailsService.getUserDetails(user.getId().intValue());
-        return ResponseEntity.ok(new UserDTO(user, userDetails));
     }
 }
