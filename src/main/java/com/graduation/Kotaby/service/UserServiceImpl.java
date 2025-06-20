@@ -43,6 +43,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void updateLastRead(int userId, int lastSurah, int lastAyah) {
+        userDAO.updateLastRead(userId, lastSurah, lastAyah);
+    }
+
+    @Override
     @Transactional
     public List<User> getUsers() {
         return userDAO.getUsers();

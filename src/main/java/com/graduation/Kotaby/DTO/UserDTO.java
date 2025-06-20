@@ -14,6 +14,8 @@ public class UserDTO {
     private String image;
     private Date dateOfBirth;
     private String nationality;
+    private int lastSurah;
+    private int lastAyah;
 
     public UserDTO() {
     }
@@ -26,6 +28,8 @@ public class UserDTO {
         this.image = userDetails.getImage();
         this.dateOfBirth = userDetails.getDateOfBirth();
         this.nationality = userDetails.getNationality();
+        this.lastSurah = user.getLastSurah();
+        this.lastAyah = user.getLastAyah();
     }
 
     public Long getId() {
@@ -82,6 +86,22 @@ public class UserDTO {
 
     public void setNationality(String nationality) {
         this.nationality = nationality;
+    }
+
+    public int getLastSurah() {
+        return lastSurah;
+    }
+
+    public void setLastSurah(int lastSurah) {
+        this.lastSurah = lastSurah;
+    }
+
+    public int getLastAyah() {
+        return lastAyah;
+    }
+
+    public void setLastAyah(int lastAyah) {
+        this.lastAyah = lastAyah;
     }
 
     public User toUser() {

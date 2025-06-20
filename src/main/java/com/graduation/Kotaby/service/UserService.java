@@ -13,6 +13,8 @@ public interface UserService {
 
     public void updateUser(User user);
 
+    public void updateLastRead(int userId, int lastSurah, int lastAyah);
+
     public List<User> getUsers();
 
     public User getUserByEmail(String email);

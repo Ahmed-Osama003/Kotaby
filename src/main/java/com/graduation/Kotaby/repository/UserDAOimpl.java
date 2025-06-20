@@ -41,6 +41,16 @@ public class UserDAOimpl implements UserDAO {
     }
 
     @Override
+    public void updateLastRead(int userId, int lastSurah, int lastAyah) {
+        User user = getUser(userId);
+        if (user != null) {
+            user.setLastSurah(lastSurah);
+            user.setLastAyah(lastAyah);
+            entityManager.merge(user);
+        }
+    }
+
+    @Override
     public List<User> getUsers() {
         return entityManager.createQuery("from User", User.class).getResultList();
     }

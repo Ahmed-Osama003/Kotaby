@@ -18,6 +18,10 @@ public class User {
     private String password;
     @Column(name = "email")
     private String email;
+    @Column(name = "last_surah")
+    private int lastSurah;
+    @Column(name="last_ayah")
+    private int lastAyah;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks = new ArrayList<>();
 
@@ -61,6 +65,30 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getLastSurah() {
+        return lastSurah;
+    }
+
+    public void setLastSurah(int lastSurah) {
+        this.lastSurah = lastSurah;
+    }
+
+    public int getLastAyah() {
+        return lastAyah;
+    }
+
+    public void setLastAyah(int lastAyah) {
+        this.lastAyah = lastAyah;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 
     @Override
