@@ -14,4 +14,8 @@ public interface TaskDAO {
     List<Task> getTasks();
 
     void deleteTask(int id);
+
+    void deleteTasksByUserId(int userId);
+
+    Task updateTask(Task task);
 }
