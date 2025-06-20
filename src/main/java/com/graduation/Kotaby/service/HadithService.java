@@ -6,99 +6,153 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.client.RestClientException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
-public class HadithService {private static final Logger logger = Logger.getLogger(HadithService.class.getName());
+@Service
+public class HadithService {
 
+    private static final Logger logger = LoggerFactory.getLogger(HadithService.class);
     private static final String DORAR_API_URL = "https://dorar.net/dorar_api.json";
 
-    private final RestTemplate restTemplate;
+    @Autowired
+    private RestTemplate restTemplate;
 
-    public HadithService() {
-        this.restTemplate = new RestTemplate();
+    public HadithResponseDTO getRandomHadiths() {
+        return fetchHadiths("");
     }
 
-
-    public List<HadithDTO> getRandomHadiths() {
-        return getHadiths("");
+    public HadithResponseDTO searchHadiths(String searchKey) {
+        return fetchHadiths(searchKey);
     }
 
-    public List<HadithDTO> searchHadiths(String searchKey) {
-        return getHadiths(searchKey);
-    }
-
-
-    private List<HadithDTO> getHadiths(String searchKey) {
+    private HadithResponseDTO fetchHadiths(String searchKey) {
         try {
             String url = DORAR_API_URL + "?skey=" + (searchKey != null ? searchKey : "");
-            logger.info("Calling Dorar API: " + url);
+            logger.info("Fetching hadiths from: {}", url);
 
             HadithResponseDTO response = restTemplate.getForObject(url, HadithResponseDTO.class);
 
             if (response != null && response.getAhadith() != null && response.getAhadith().getResult() != null) {
-                return parseHadithHtml(response.getAhadith().getResult());
+                List<HadithDTO> parsedHadiths = new ArrayList<>();
+                String allHadithsHtml = response.getAhadith().getResult();
+
+                String[] hadithBlocks = allHadithsHtml.split("--------------\\s*<br\\s*/?>\\s*");
+
+                for (String htmlBlock : hadithBlocks) {
+                    try {
+                        if (htmlBlock.trim().isEmpty()) continue;
+
+                        HadithDTO hadith = parseHadithHtml(htmlBlock.trim());
+                        if (hadith != null) {
+                            parsedHadiths.add(hadith);
+                        }
+                    } catch (Exception e) {
+                        logger.error("Error parsing individual hadith: {}", e.getMessage());
+                    }
+                }
+
+                HadithResponseDTO cleanResponse = new HadithResponseDTO();
+                cleanResponse.setSuccess(true);
+                cleanResponse.setData(parsedHadiths);
+                cleanResponse.setCount(parsedHadiths.size());
+                cleanResponse.setMessage(searchKey.isEmpty() ?
+                        "Random hadiths retrieved successfully" :
+                        "Search results retrieved successfully");
+
+                return cleanResponse;
             }
 
-            return new ArrayList<>();
-
-        } catch (RestClientException e) {
-            logger.severe("Error calling Dorar API: " + e.getMessage());
-            throw new RuntimeException("Failed to fetch hadiths from external API", e);
-        }
-    }
-
-    private List<HadithDTO> parseHadithHtml(String htmlContent) {
-        List<HadithDTO> hadiths = new ArrayList<>();
-
-        try {
-            Document doc = Jsoup.parse(htmlContent);
-            Elements hadithElements = doc.select("div.hadith");
-            Elements hadithInfoElements = doc.select("div.hadith-info");
-
-            for (int i = 0; i < hadithElements.size() && i < hadithInfoElements.size(); i++) {
-                Element hadithElement = hadithElements.get(i);
-                Element infoElement = hadithInfoElements.get(i);
-
-                String hadithText = cleanArabicText(hadithElement.text());
-
-                String narrator = extractInfoValue(infoElement, "الراوي:");
-                String scholar = extractInfoValue(infoElement, "المحدث:");
-                String source = extractInfoValue(infoElement, "المصدر:");
-                String pageOrNumber = extractInfoValue(infoElement, "الصفحة أو الرقم:");
-                String authenticity = extractInfoValue(infoElement, "خلاصة حكم المحدث:");
-
-                String rawHtml = hadithElement.outerHtml() + infoElement.outerHtml();
-
-                HadithDTO hadith = new HadithDTO(hadithText, narrator, scholar, source,
-                        pageOrNumber, authenticity, rawHtml);
-                hadiths.add(hadith);
-            }
+            return createErrorResponse("No data received from API");
 
         } catch (Exception e) {
-            logger.severe("Error parsing hadith HTML: " + e.getMessage());
+            logger.error("Error fetching hadiths: {}", e.getMessage());
+            return createErrorResponse("Failed to fetch hadiths: " + e.getMessage());
         }
-
-        return hadiths;
     }
 
-    private String extractInfoValue(Element infoElement, String label) {
-        Elements spans = infoElement.select("span");
-        for (int i = 0; i < spans.size() - 1; i++) {
-            if (spans.get(i).text().equals(label)) {
-                return spans.get(i + 1).text().trim();
+    private HadithDTO parseHadithHtml(String htmlContent) {
+        try {
+            Document doc = Jsoup.parse(htmlContent);
+            HadithDTO hadith = new HadithDTO();
+
+            Element hadithDiv = doc.selectFirst("div.hadith");
+            if (hadithDiv != null) {
+                hadith.setHadithText(hadithDiv.text().trim());
             }
+
+            Element infoDiv = doc.selectFirst("div.hadith-info");
+            if (infoDiv != null) {
+                String infoText = infoDiv.html();
+
+                String narrator = extractInfoValue(infoText, "الراوي:");
+                hadith.setNarrator(narrator.isEmpty() ? "غير محدد" : narrator);
+
+                String scholar = extractInfoValue(infoText, "المحدث:");
+                hadith.setScholar(scholar.isEmpty() ? "غير محدد" : scholar);
+
+                String source = extractInfoValue(infoText, "المصدر:");
+                hadith.setSource(source.isEmpty() ? "غير محدد" : source);
+
+                String pageOrNumber = extractInfoValue(infoText, "الصفحة أو الرقم:");
+                hadith.setPageOrNumber(pageOrNumber.isEmpty() ? "غير محدد" : pageOrNumber);
+
+                String authenticity = extractInfoValue(infoText, "خلاصة حكم المحدث:");
+                hadith.setAuthenticity(authenticity.isEmpty() ? "غير محدد" : authenticity);
+            }
+
+            hadith.setRawHtml(htmlContent);
+            return hadith;
+
+        } catch (Exception e) {
+            logger.error("Error parsing hadith HTML: {}", e.getMessage());
+            return null;
         }
-        return "";
     }
 
-    private String cleanArabicText(String text) {
-        if (text == null) return "";
-        return text.replaceAll("\\s+", " ").trim();
+    private String extractInfoValue(String html, String label) {
+        try {
+            int labelIndex = html.indexOf(label);
+            if (labelIndex == -1) {
+                return "";
+            }
+
+            int startIndex = labelIndex + label.length();
+
+            int endIndex = html.indexOf("<span class=\"info-subtitle\">", startIndex);
+            if (endIndex == -1) {
+                endIndex = html.length();
+            }
+
+            String rawValue = html.substring(startIndex, endIndex);
+
+            Document tempDoc = Jsoup.parse(rawValue);
+            String cleanValue = tempDoc.text().trim();
+
+            if (cleanValue.startsWith("-")) {
+                cleanValue = cleanValue.substring(1).trim();
+            }
+
+            return cleanValue;
+
+        } catch (Exception e) {
+            logger.error("Error extracting info value for label {}: {}", label, e.getMessage());
+            return "";
+        }
+    }
+
+    private HadithResponseDTO createErrorResponse(String message) {
+        HadithResponseDTO response = new HadithResponseDTO();
+        response.setSuccess(false);
+        response.setData(new ArrayList<>());
+        response.setCount(0);
+        response.setMessage(message);
+        return response;
     }
 }
