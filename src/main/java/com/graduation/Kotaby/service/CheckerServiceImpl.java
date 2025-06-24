@@ -33,6 +33,7 @@ public class CheckerServiceImpl implements CheckerService {
                 break;
             }
         }
+        memorizationService.save(userID, page, r);
         correctWords.forEach(System.out::println);
         return correctWords;
     }
