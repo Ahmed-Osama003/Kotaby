@@ -1,5 +1,6 @@
 package com.graduation.Kotaby.controller;
 
+import com.graduation.Kotaby.DTO.ResetPasswordRequest;
 import com.graduation.Kotaby.DTO.UserDTO;
 import com.graduation.Kotaby.entity.primary.Streak;
 import com.graduation.Kotaby.entity.primary.User;
@@ -106,4 +107,17 @@ public class UserController {
         String imageUrl = userDetailsService.updateProfilePhoto(userId, file);
         return ResponseEntity.ok(imageUrl);
     }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+        User user = userService.getUserByEmail(resetPasswordRequest.getEmail());
+        if (user  == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "User not found"));
+        }
+        user.setPassword(resetPasswordRequest.getPassword());
+        userService.saveUser(user);
+        return ResponseEntity.ok("Password reset successfully");
+    }
+
 }
