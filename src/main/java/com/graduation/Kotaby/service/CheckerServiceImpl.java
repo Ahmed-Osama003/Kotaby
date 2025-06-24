@@ -8,6 +8,7 @@ import java.util.Objects;
 
 @Service
 public class CheckerServiceImpl implements CheckerService {
+    private static final double SIMILARITY_THRESHOLD = 0.8;
     private final MemorizationService memorizationService;
 
     public CheckerServiceImpl(MemorizationService memorizationService) {
@@ -26,6 +27,10 @@ public class CheckerServiceImpl implements CheckerService {
         while (l < n && r < m) {
             System.out.println("Comparing: " + removeTashkeel(userWords.get(l)) + " with " + removeTashkeel(pageWords.get(r)));
             if (Objects.equals(removeTashkeel(userWords.get(l)), removeTashkeel(pageWords.get(r)))) {
+                correctWords.add(userWords.get(l));
+                l++;
+                r++;
+            } else if (calculateSimilarity(removeTashkeel(userWords.get(l)), removeTashkeel(pageWords.get(r))) >= SIMILARITY_THRESHOLD) {
                 correctWords.add(userWords.get(l));
                 l++;
                 r++;
@@ -48,5 +53,30 @@ public class CheckerServiceImpl implements CheckerService {
         result = result.replace("إ", "ا");
         result = result.replace("آ", "ا");
         return result;
+    }
+
+    private double calculateSimilarity(String str1, String str2) {
+        int lcsLength = getLCSLength(str1, str2);
+        int maxLength = Math.max(str1.length(), str2.length());
+        return maxLength > 0 ? (double) lcsLength / maxLength : 1.0;
+    }
+
+    private int getLCSLength(String str1, String str2) {
+        int m = str1.length();
+        int n = str2.length();
+        int[][] dp = new int[m + 1][n + 1];
+
+        for (int i = 0; i <= m; i++) {
+            for (int j = 0; j <= n; j++) {
+                if (i == 0 || j == 0) {
+                    dp[i][j] = 0;
+                } else if (str1.charAt(i - 1) == str2.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+        return dp[m][n];
     }
 }
