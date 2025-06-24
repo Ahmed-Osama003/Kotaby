@@ -1,6 +1,7 @@
 package com.graduation.Kotaby.controller;
 
 import com.graduation.Kotaby.service.CheckerService;
+import com.graduation.Kotaby.service.MemorizationService;
 import com.graduation.Kotaby.service.ModelService;
 import com.graduation.Kotaby.service.WordsService;
 import org.springframework.http.HttpStatus;
@@ -20,11 +21,13 @@ public class ModelController {
     private final ModelService modelService;
     private final WordsService wordsService;
     private final CheckerService checkerService;
+    private final MemorizationService memorizationService;
 
-    public ModelController(ModelService modelService, WordsService wordsService, CheckerService checkerService) {
+    public ModelController(ModelService modelService, WordsService wordsService, CheckerService checkerService, MemorizationService memorizationService) {
         this.modelService = modelService;
         this.wordsService = wordsService;
         this.checkerService = checkerService;
+        this.memorizationService = memorizationService;
     }
 
     @GetMapping("/test-cors")
@@ -56,6 +59,22 @@ public class ModelController {
         } catch (Exception e) {
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", "Error processing audio file: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                .body(errorResponse);
+        }
+    }
+    @PostMapping(path = "/save")
+    public ResponseEntity<?> saveWork(@RequestParam("id") int userID,
+                                      @RequestParam("page") int page,
+                                      @RequestParam("last") int lastWord) {
+        try {
+            memorizationService.save(userID, page, lastWord);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Work saved successfully");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Error saving work: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                 .body(errorResponse);
         }

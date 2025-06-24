@@ -11,5 +11,7 @@ public interface MemorizationService {
 
     int getLastWord(int userID, int page);
 
+    int getUserProgress(int userID);
+
     void deleteInfo(int userID, int page);
 }

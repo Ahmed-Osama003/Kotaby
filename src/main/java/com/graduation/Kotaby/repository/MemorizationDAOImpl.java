@@ -60,4 +60,12 @@ public class MemorizationDAOImpl implements MemorizationDAO {
                 .setParameter("page", page)
                 .executeUpdate();
     }
+
+    @Override
+    public int getUserProgress(int userID) {
+        Long sum= entityManager.createQuery("select sum(m.lastWord) from Memorization m where m.userID = :userID", Long.class)
+                .setParameter("userID", userID)
+                .getSingleResult();
+        return sum != null ? sum.intValue() : 0;
+    }
 }

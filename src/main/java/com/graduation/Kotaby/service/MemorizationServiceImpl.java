@@ -35,6 +35,11 @@ public class MemorizationServiceImpl implements MemorizationService {
     }
 
     @Override
+    public int getUserProgress(int userID) {
+        return memorizationDAO.getUserProgress(userID);
+    }
+
+    @Override
     @Transactional
     public void deleteInfo(int userID, int page) {
         memorizationDAO.deleteInfo(userID, page);

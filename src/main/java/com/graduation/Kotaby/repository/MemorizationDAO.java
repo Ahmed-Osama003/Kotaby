@@ -12,4 +12,6 @@ public interface MemorizationDAO {
     int getLastWord(int userID, int page);
 
     void deleteInfo(int userID, int page);
+
+    int getUserProgress(int userID);
 }
